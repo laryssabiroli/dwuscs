@@ -8,63 +8,77 @@ const port = 3000
 const bodyParser = require('body-parser')
 //declara e inicializa um vetor de mensagens
 const mensagens = [
-    {"texto":"1º mensagem"},
-    {"texto":"2º mensagem"}
+
+    {"texto":"Primeira mensagem"},
+    {"texto":"Segunda mensagem"},
+    {}
+
 ]
 //informa que usará o bordyParser para converter o corpo da requisição
 //para o formato json
 app.use(bodyParser.json())
+
+
 //Ler todas as mensagens (Read)
 app.get('/',(req, res) => {
-res.send(mensagens)
-})
-
-//Ler uma mensagem pelo índice
-app.get('/mensagem1/:id', (req,res) => {
+    res.send(mensagens)
+    })
+    
+    //Ler uma mensagem pelo índice
+    app.get('/mensagem1/:id', (req,res) => {
     //parseInt - converte de String para int
     const id = parseInt(req.params.id)
     const mensagem = mensagens[id]
     if (mensagens.length <= id)
-        res.send("Não existe mensagem no índice "+id.toString())
+    res.send("Não existe mensagem no índice "+id.toString())
     else
-        res.send(mensagem);
+    res.send(mensagem[id])
+    
+    })
 
-});
-//Criar uma nova mensagem
-app.post('/', (req, res) => {
+    //Criar uma nova mensagem
+app.post('/', (req, res) =>{
     //obtém o atributo texto do json
-    const mensagem = req.body.texto.toString();
-    //const txt = mensagem.toString();
-    if (mensagem.length == 0){//txt.length == 0
+    const mensagem = req.body //.texto.toString()
+    const txt = mensagem.texto.toString()
+    if (txt.length == 0 )
         res.send('Mensagem Inválida');
-    }
     else {
-        mensagens.push(mensagem); //txt
-        res.send('Incluída Conculido com Sucesso');
+        mensagens.push(mensagem)
+        res.send('Mensagem Incluída na Lista')
     }
-});
-//Atualizar
-app.put('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const mensagem = req.body.texto;
-    if (id >= 0 && id < mensagens.length){
-        mensagens[id] = mensagem;
-        //mensagem[id] = req.body.texto;
-        res.send('Alterar individual por índice');
-    } else {
-        res.send('Indice Inválido');
-    }
-});
-//Excluir
-app.delete('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    if (id >= 0 && id < mensagens.length){
-        //remove um elemento da lista mensagens do índice id
-        mensagens.splice(id,1);
-        res.send('mensagem removida com sucesso');
-    } else {
-        res.send('índice não encontrado');
-    }
-});
+    })
 
-app.listen(port);
+    //Excluir
+app.delete('/:id', function (req, res) {
+    const id = parseInt(req.params.id)
+    if (id >= 0 && id < mensagens.length){
+    //remove um elemento da lista mensagens do índice id
+    mensagens.splice(id,1);
+    res.send('mensagem removida com sucesso');
+    } else {
+    res.send('índice não encontrado')
+    }
+    });
+
+app.put('/:id',  (req, res)=>{
+    const id = parseInt (req.params.id)
+    if(id>= 0 && id < mensagens.length){
+    mensagens[id]=req.body //.texto
+    res.send("Alteração Realizada com Sucesso")
+} 
+else
+res.send("Indíce Inválido")
+})
+
+app.delete('/:id',  (req, res)=>{
+    const id = parseInt (req.params.id)
+    if(id>= 0 && id < mensagens.length){
+    mensagens.splic(id,1)
+    res.send("Remoção Realizada com Sucesso")
+} 
+else
+res.send("Indíce Inválido")
+})
+    
+    app.listen(port)
